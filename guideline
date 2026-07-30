@@ -2,7 +2,6 @@
   document everyone uses — it lists all opcodes with exact behavior. Skimming it
   before coding saves you from guessing.
   2. Add an Initialize() step (or constructor logic):
-    - Set pc = 0x200.
     - Load the built-in fontset into memory (16 characters 0–F, each a 5-byte sprite)
   at a fixed location, conventionally 0x50. Games rely on this being present aa
   known address.
