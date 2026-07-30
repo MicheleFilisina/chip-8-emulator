@@ -1,0 +1,61 @@
+1. Read the spec once, fully. Cowgod's Chip-8 Technical Reference is the classic
+  document everyone uses — it lists all opcodes with exact behavior. Skimming it
+  before coding saves you from guessing.
+  2. Add an Initialize() step (or constructor logic):
+    - Set pc = 0x200.
+    - Load the built-in fontset into memory (16 characters 0–F, each a 5-byte sprite)
+  at a fixed location, conventionally 0x50. Games rely on this being present aa
+  known address.
+  3. Add ROM loading: read a .ch8 file's bytes into memory starting at 0x200.
+  4. Implement the fetch-decode-execute cycle as a Cycle() method:
+    - Fetch: opcode = (memory[pc] << 8) | memory[pc + 1]; (CHIP-8 opcodes are
+  big-endian, 2 bytes each).
+    - Decode: look at the top nibble (4 bits) of the opcode to figure out which
+  instruction family it is, then dispatch (a switch statement, or a function-pointer
+  table indexed by opcode nibbles — either works; a switch is simpler to startwith).
+    - Execute: run the corresponding logic, then advance pc += 2 (unless the
+  instruction itself jumped/branched).
+  5. Implement opcodes incrementally, testing as you go — don't write all 35 aonce
+  blind:
+    - Start with the ones needed to display something: 00E0 (clear screen), 1NNN
+  (jump), 6XNN (set register), ANNN (set index), DXYN (draw sprite).
+    - Run a minimal test ROM (the "IBM logo" ROM is the standard first target it
+  only needs those 5 opcodes and gives you visual confirmation things work).
+    - Then add arithmetic (7XNN, 8XY_ family), control flow (3XNN/4XNN/5XY0/9XY0
+  skip-if, 2NNN/00EE call/return), and the rest.
+    - corax89's or Timendus's CHIP-8 test ROM suites are widely used to verify
+  correctness opcode-by-opcode once you have the basics working.
+  6. Add timers, decremented at 60Hz — separately from however fast you run thCPU
+  cycle loop, since CPU speed and timer speed are independent.
+  7. Add a rendering + input layer. The Chip8 class itself should stay UI-agnostic
+  (just simulates state); a separate Platform class using something like SDL2 handles
+  creating a window, drawing video[] as pixels, polling keyboard input into keypad[],
+  and playing a beep when soundTimer > 0.
+  8. Wire it together in main(): load ROM → loop { handle input, run N cycles,
+  decrement timers at 60Hz, render frame }.
+  9. Test with real games once test ROMs pass — Pong, Tetris, Space Invaders are
+  1NNN (jump), 6XNN (set register), ANNN (set index), DXYN (draw sprite).
+    - Run a minimal test ROM (the "IBM logo" ROM is the standard first target —
+  it only needs those 5 opcodes and gives you visual confirmation things
+  work).
+    - Then add arithmetic (7XNN, 8XY_ family), control flow
+  (3XNN/4XNN/5XY0/9XY0 skip-if, 2NNN/00EE call/return), and the rest.
+    - corax89's or Timendus's CHIP-8 test ROM suites are widely used to verify
+  correctness opcode-by-opcode once you have the basics working.
+  6. Add timers, decremented at 60Hz — separately from however fast you run the
+  CPU cycle loop, since CPU speed and timer speed are independent.
+  7. Add a rendering + input layer. The Chip8 class itself should stay
+  UI-agnostic (just simulates state); a separate Platform class using something
+  saves you from guessing.
+  2. Add an Initialize() step (or constructor logic):
+    - Set pc = 0x200.
+  5. Implement opcodes incrementally, testing as you go — don't write all 35 at once blind:
+    - Start with the ones needed to display something: 00E0 (clear screen), 1NNN (jump), 6XNN (set register), ANNN (set index), DXYN (draw sprite).
+    - Run a minimal test ROM (the "IBM logo" ROM is the standard first target — it only needs those 5 opcodes and gives you visual confirmation things work).
+    - Then add arithmetic (7XNN, 8XY_ family), control flow (3XNN/4XNN/5XY0/9XY0 skip-if, 2NNN/00EE call/return), and the rest.
+    - corax89's or Timendus's CHIP-8 test ROM suites are widely used to verify correctness opcode-by-opcode once you have the basics working.
+  6. Add timers, decremented at 60Hz — separately from however fast you run the CPU cycle loop, since CPU speed and timer speed are independent.
+  7. Add a rendering + input layer. The Chip8 class itself should stay UI-agnostic (just simulates state); a separate Platform class using something like SDL2 handles creating
+  a window, drawing video[] as pixels, polling keyboard input into keypad[], and playing a beep when soundTimer > 0.
+  8. Wire it together in main(): load ROM → loop { handle input, run N cycles, decrement timers at 60Hz, render frame }.
+  9. Test with real games once test ROMs pass — Pong, Tetris, Space Invaders are common CHIP-8 ROMs used for this.
