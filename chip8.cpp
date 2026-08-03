@@ -1,4 +1,5 @@
 #include <cstdint>
+#include <fstream>
 
 const uint16_t start_address = 0x200;
 const uint16_t fontset_start_add = 0x50;
@@ -38,8 +39,37 @@ public:
 	uint8_t keypad[16]{};
 	uint32_t video[64 * 32]{};
 	uint16_t opcode{};
+	Chip8();
+	void LoadROM(char const* filename);
 };
 
+
+void Chip8::LoadROM(char const* filename)
+{
+	// Open the file as a stream of binary and move the file pointer to the end
+	std::ifstream file(filename, std::ios::binary | std::ios::ate);
+
+	if (file.is_open())
+	{
+		// Get size of file and allocate a buffer to hold the contents
+		std::streampos size = file.tellg(); // end position = file size in bytes
+		char* buffer = new char[size];
+
+		// Go back to the beginning of the file and fill the buffer
+		file.seekg(0, std::ios::beg);
+		file.read(buffer, size);
+		file.close();
+
+		// Load the ROM contents into the Chip8's memory, starting at 0x200
+		for (long i = 0; i < size; ++i)
+		{
+			memory[start_address + i] = buffer[i];
+		}
+
+		// Free the buffer
+		delete[] buffer;
+	}
+}
 
 
 Chip8::Chip8(){
