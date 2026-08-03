@@ -3,7 +3,7 @@
 
 
 # specifics
-the specifics for this project are taken from (http://devernay.free.fr/hacks/chip8/C8TECH10.HTM#2.1)[Cowgod's Chip-8 Technical Reference v1.0]
+the specifics for this project are taken from [Cowgod's Chip-8 Technical Reference v1.0](http://devernay.free.fr/hacks/chip8/C8TECH10.HTM#2.1)
 
 ## CPU
 16 general purpose registers of 1 byte each: V0, V1, V2...VE, VF.
