@@ -48,6 +48,8 @@ public:
 	void OP_00EE();
 	void OP_1nnn();
 	void OP_2nnn();
+	void OP_3xkk();
+	void OP_4xkk();
 };
 
 void Chip8::FDE(){
@@ -122,4 +124,18 @@ void Chip8::OP_2nnn(){
 	stack[sp] = pc;
 	sp++;
 	pc = nnn;
+}
+
+// Skip next instrution if Vx = kk
+void Chip8::OP_3xkk(){
+	uint8_t x = (opcode>>8u) & 0x0F;
+	uint8_t kk = opcode & 0x00FF;
+	if(registers[x] == kk) pc += 2;
+}
+
+// Skip next instruction if Vx != kk
+void Chip8::OP_4xkk(){
+	uint8_t x = (opcode>>8u) & 0x0F;
+	uint8_t kk = opcode & 0x00FF;
+	if(registers[x] != kk) pc += 2;
 }
