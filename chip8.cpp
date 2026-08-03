@@ -1,4 +1,5 @@
 #include <cstdint>
+#include <cstring>
 #include <fstream>
 
 const uint16_t start_address = 0x200;
@@ -41,7 +42,17 @@ public:
 	uint16_t opcode{};
 	Chip8();
 	void LoadROM(char const* filename);
+	void FDE();
+
+	void OP_00E0();
+	void OP_00EE();
+	void OP_1nnn();
 };
+
+void Chip8::FDE(){
+	opcode = (memory[pc]<<8u) + memory[pc+1];
+	pc+=2;
+}
 
 
 void Chip8::LoadROM(char const* filename)
@@ -83,3 +94,23 @@ Chip8::Chip8(){
 	}
 }
 
+
+/* ######### INSTRUCTIONS ######### */
+
+// CLS: Clear The Display
+void Chip8::OP_00E0(){
+	//for(int i=0; i<64*32; i++) video[i] = 0;
+	memset(video, 0, sizeof(video));
+}
+
+// RET: Return From a Subroutine
+void Chip8::OP_00EE(){
+	sp--;
+	pc = stack[sp];
+}
+
+// JP Addr: jump to address nnn;
+void Chip8::OP_1nnn(){
+	uint16_t nnn = opcode & 0x0FFF;
+	pc = nnn;
+}
