@@ -47,6 +47,7 @@ public:
 	void OP_00E0();
 	void OP_00EE();
 	void OP_1nnn();
+	void OP_2nnn();
 };
 
 void Chip8::FDE(){
@@ -112,5 +113,13 @@ void Chip8::OP_00EE(){
 // JP Addr: jump to address nnn;
 void Chip8::OP_1nnn(){
 	uint16_t nnn = opcode & 0x0FFF;
+	pc = nnn;
+}
+
+// CALL Addr: Call subroutine at nnn
+void Chip8::OP_2nnn(){
+	uint16_t nnn = opcode & 0x0FFF;
+	stack[sp] = pc;
+	sp++;
 	pc = nnn;
 }
