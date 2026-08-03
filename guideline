@@ -1,11 +1,7 @@
 1. Read the spec once, fully. Cowgod's Chip-8 Technical Reference is the classic
   document everyone uses — it lists all opcodes with exact behavior. Skimming it
   before coding saves you from guessing.
-  2. Add an Initialize() step (or constructor logic):
-    - Load the built-in fontset into memory (16 characters 0–F, each a 5-byte sprite)
-  at a fixed location, conventionally 0x50. Games rely on this being present aa
-  known address.
-  3. Add ROM loading: read a .ch8 file's bytes into memory starting at 0x200.
+  
   4. Implement the fetch-decode-execute cycle as a Cycle() method:
     - Fetch: opcode = (memory[pc] << 8) | memory[pc + 1]; (CHIP-8 opcodes are
   big-endian, 2 bytes each).

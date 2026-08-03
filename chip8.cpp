@@ -50,6 +50,18 @@ public:
 	void OP_2nnn();
 	void OP_3xkk();
 	void OP_4xkk();
+	void OP_5xy0();
+	void OP_6xkk();
+	void OP_7xkk();
+	void OP_8xy0();
+	void OP_8xy1();
+	void OP_8xy2();
+	void OP_8xy3();
+	void OP_8xy4();
+	void OP_8xy5();
+	void OP_8xy6();
+	void OP_8xy7();
+	void OP_8xyE();
 };
 
 void Chip8::FDE(){
@@ -135,7 +147,85 @@ void Chip8::OP_3xkk(){
 
 // Skip next instruction if Vx != kk
 void Chip8::OP_4xkk(){
-	uint8_t x = (opcode>>8u) & 0x0F;
-	uint8_t kk = opcode & 0x00FF;
+	uint8_t x = (opcode>>8u) & 0xF;
+	uint8_t kk = opcode & 0xFF;
 	if(registers[x] != kk) pc += 2;
+}
+
+// Skip next instruction if Vx = Vy
+void Chip8::OP_5xy0(){
+	uint8_t x = (opcode>>8u) & 0xF;
+	uint8_t y = (opcode>>4u) & 0xF;
+	if(registers[x] == registers[y]) pc += 2;
+}
+
+// Set Vx = kk
+void Chip8::OP_6xkk(){
+	uint8_t x = (opcode>>8u) & 0xF;
+	uint8_t kk = opcode & 0xFF;
+	registers[x] = kk;
+}
+
+// Set Vx = kk
+void Chip8::OP_7xkk(){
+	uint8_t x = (opcode>>8u) & 0xF;
+	uint8_t kk = opcode & 0xFF;
+	registers[x] += kk;
+}
+
+// Stores the value of register Vy in register Vx
+void Chip8::OP_8xy0(){
+	uint8_t x = (opcode>>8u) & 0xF;
+	uint8_t y = (opcode>>4u) & 0xF;
+	registers[x] = registers[y];
+}
+
+// Set Vx = Vx OR Vy
+void Chip8::OP_8xy1(){
+	uint8_t x = (opcode>>8u) & 0xF;
+	uint8_t y = (opcode>>4u) & 0xF;
+	registers[x] |= registers[y];
+}
+
+// Set Vx = Vx AND Vy
+void Chip8::OP_8xy2(){
+	uint8_t x = (opcode>>8u) & 0xF;
+	uint8_t y = (opcode>>4u) & 0xF;
+	registers[x] &= registers[y];
+}
+
+// Set Vx = Vx XOR Vy
+void Chip8::OP_8xy3(){
+	uint8_t x = (opcode>>8u) & 0xF;
+	uint8_t y = (opcode>>4u) & 0xF;
+	registers[x] ^= registers[y];
+}
+
+// Set Vx = Vx + Vy, set VF = carry
+void Chip8::OP_8xy4(){
+	uint8_t x = (opcode>>8u) & 0xF;
+	uint8_t y = (opcode>>4u) & 0xF;
+
+	uint16_t sum = registers[x] + registers[y];
+	sum > 255 ? registers[15] = 1 : registers[15] = 0;
+
+	registers[x] = sum;
+}
+
+// Set Vx = Vx - Vy, set VF = NOT borrow.
+void Chip8::OP_8xy5(){
+	uint8_t x = (opcode>>8u) & 0xF;
+	uint8_t y = (opcode>>4u) & 0xF;
+
+	registers[x] > registers[y] ? registers[15] = 1 : registers[15] = 0;
+
+	registers[x] -= registers[y];
+}
+
+// Set Vx = Vx SHR 1
+void Chip8::OP_8xy6(){
+	uint8_t x = (opcode>>8) & 0xF;
+
+	registers[15] = registers[x] & 0x1;
+	registers[x] >>= 1;
 }

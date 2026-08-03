@@ -21,25 +21,33 @@ The stack pointer is a 8 bit index.
 2 8 bits registers for delay and timers, when they are not 0 they are decremented by one at 60hz rate.
 
 ## Memory
-+---------------+= 0xFFF (4095) End of Chip-8 RAM
-|               |
-|               |
-|               |
-|               |
-|               |
-| 0x200 to 0xFFF|
-|     Chip-8    |
-| Program / Data|
-|     Space     |
-|               |
-|               |
-|               |
-+- - - - - - - -+= 0x600 (1536) Start of ETI 660 Chip-8 programs
-|               |
-|               |
-|               |
-+---------------+= 0x200 (512) Start of most Chip-8 programs
-| 0x000 to 0x1FF|
-| Reserved for  |
-|  interpreter  |
-+---------------+= 0x000 (0) Start of Chip-8 RAM
+┌─────────────────────────────────────────────────┐
+│                  CHIP-8 MEMORY MAP              │
+├─────────────────────────────────────────────────┤
+│                                                 │
+│  0x000 ─────────────────────────────────────    │
+│  (0)    ╔═════════════════════════════════╗   │
+│         ║  Reserved for Interpreter      ║   │
+│         ║  (512 bytes)                   ║   │
+│  0x1FF  ╚═════════════════════════════════╝   │
+│                                                 │
+│  0x200 ─────────────────────────────────────    │
+│  (512)  ╔═════════════════════════════════╗   │
+│         ║  Program / Data Space           ║   │
+│         ║  (Most Chip-8 programs start    ║   │
+│         ║   here)                         ║   │
+│         ║                                 ║   │
+│  0x5FF  ║  (1536 bytes)                   ║   │
+│         ╚═════════════════════════════════╝   │
+│                                                 │
+│  0x600 ─────────────────────────────────────    │
+│  (1536) ╔═════════════════════════════════╗   │
+│         ║  ETI 660 Program Space          ║   │
+│         ║  (Alternative start location)   ║   │
+│         ║                                 ║   │
+│  0xFFF  ║  (3584 bytes)                   ║   │
+│  (4095) ╚═════════════════════════════════╝   │
+│                                                 │
+├─────────────────────────────────────────────────┤
+│  Total RAM: 4,096 bytes (4 KB)                 │
+└─────────────────────────────────────────────────┘
