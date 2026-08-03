@@ -343,3 +343,84 @@ void Chip8::OP_ExA1(){
 
 	if (!keypad[value]) pc += 2;
 }
+
+// Set Vx = delay timer value
+void Chip8::OP_Fx07(){
+	uint8_t x = (opcode>>8) & 0x0F;
+	registers[x] = delayTimer;
+}
+
+//  Wait for a key press, store the value of the key in Vx.
+void Chip8::OP_Fx0A(){
+	uint8_t x = (opcode>>8) & 0x0F;
+
+	bool keyPressed = false;
+	for(int i=0; i<16; i++){
+		if(keypad[i]){
+			registers[x] = i;
+			keyPressed = true;
+			break;
+		}
+	}
+
+	if(!keyPressed) pc -= 2;
+}
+
+// Set delay timer = Vx
+void Chip8::OP_Fx15(){
+	uint8_t x = (opcode>>8) & 0x0F;
+	delayTimer = registers[x];
+}
+
+// Set sound timer = Vx
+void Chip8::OP_Fx18(){
+	uint8_t x = (opcode>>8) & 0x0F;
+	soundTimer = registers[x];
+}
+
+// Set I = I + Vx
+void Chip8::OP_Fx1E(){
+	uint8_t x = (opcode>>8) & 0x0F;
+	index += registers[x];
+}
+
+// Set I = location of sprite for digit Vx
+void Chip8::OP_Fx29(){
+	uint8_t x = (opcode>>8) & 0x0F;
+	uint8_t value = registers[x];
+	index = fontset_start_add + (value * char_weight);
+}
+
+// Store BCD representation of Vx in memory locations I, I+1, and I+2
+void Chip8::OP_Fx33(){
+	uint8_t x = (opcode>>8) & 0x0F;
+	uint8_t value = registers[x];
+
+	uint8_t ones = value % 10;
+	value /= 10;
+
+	uint8_t tens = value % 10;
+	value /= 10;
+
+	uint8_t hundreds = value % 10;
+
+	memory[index] = hundreds;
+	memory[index + 1] = tens;
+	memory[index + 2] = ones;
+}
+
+// Store registers V0 through Vx in memory starting at location I
+void Chip8::OP_Fx55(){
+	uint8_t x = (opcode>>8) & 0x0F;
+	for(int i=0; i<=x; i++){
+		memory[index + i] = registers[i];
+	}
+}
+
+// Read registers V0 through Vx from memory starting at location I
+void Chip8::OP_Fx65(){
+	uint8_t x = (opcode>>8) & 0x0F;
+	for(int i=0; i<=x; i++){
+		registers[i] = memory[index + i];
+	}
+}
