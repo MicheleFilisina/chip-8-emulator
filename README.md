@@ -1,6 +1,6 @@
 # CHIP-8 Emulator
 
-A CHIP-8 interpreter/emulator written in C++, rendered with SDL2.
+A simple CHIP-8 emulator written in C++, rendered with SDL2.
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
 
@@ -18,7 +18,7 @@ A CHIP-8 interpreter/emulator written in C++, rendered with SDL2.
 
 ## Requirements
 
-- A C++17 compiler (e.g. `g++`)
+- A C++17 compiler
 - [SDL2](https://www.libsdl.org/) development headers
 
 On Debian/Ubuntu:
@@ -41,9 +41,9 @@ g++ -std=c++17 chip8.cpp -o chip8 $(pkg-config --cflags --libs sdl2)
 
 | Argument | Description                                              |
 | -------- | --------------------------------------------------------- |
-| `Scale`  | Integer factor to scale the 64x32 display by (e.g. `10`)  |
+| `Scale`  | Integer factor to scale the 64x32 display by   |
 | `Delay`  | Delay in milliseconds between emulated cycles              |
-| `ROM`    | Path to a CHIP-8 ROM file to load                          |
+| `ROM`    | Path to a CHIP-8 ROM program/game to load                          |
 
 Example:
 
@@ -55,7 +55,7 @@ Example:
 
 The original CHIP-8 keypad is a 4x4 hex layout, mapped onto the keyboard in the same physical grid:
 
-| CHIP-8 keypad |     |     |     |     | Keyboard |     |     |     |
+CHIP-8 keypad --> Keyboard
 | :-----------: | :-: | :-: | :-: | --- | :------: | :-: | :-: | :-: |
 |       1       |  2  |  3  |  C  |     |    1     |  2  |  3  |  4  |
 |       4       |  5  |  6  |  D  |     |    Q     |  W  |  E  |  R  |
@@ -92,16 +92,12 @@ The specifics for this project are taken from [Cowgod's Chip-8 Technical Referen
 │  0x200  ───────────────────────────────────────────│
 │  (512)  ╔═════════════════════════════════════════╗│
 │         ║  Program / Data Space                   ║│
-│         ║  (Most CHIP-8 programs                  ║│
-│         ║   start here)                           ║│
 │  0x5FF  ║  (1536 bytes)                           ║│
 │         ╚═════════════════════════════════════════╝│
 │                                                    │
 │  0x600  ───────────────────────────────────────────│
 │  (1536) ╔═════════════════════════════════════════╗│
 │         ║  ETI 660 Program Space                  ║│
-│         ║  (Alternative start                     ║│
-│         ║   location)                             ║│
 │  0xFFF  ║  (3584 bytes)                           ║│
 │  (4095) ╚═════════════════════════════════════════╝│
 │                                                    │
