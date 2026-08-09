@@ -55,12 +55,12 @@ Example:
 
 The original CHIP-8 keypad is a 4x4 hex layout, mapped onto the keyboard in the same physical grid:
 
-CHIP-8 keypad --> Keyboard
-| :-----------: | :-: | :-: | :-: | --- | :------: | :-: | :-: | :-: |
-|       1       |  2  |  3  |  C  |     |    1     |  2  |  3  |  4  |
-|       4       |  5  |  6  |  D  |     |    Q     |  W  |  E  |  R  |
-|       7       |  8  |  9  |  E  |     |    A     |  S  |  D  |  F  |
-|       A       |  0  |  B  |  F  |     |    Z     |  X  |  C  |  V  |
+CHIP-8 keypad -> Keyboard
+
+|       1       |  2  |  3  |  C  |  ->   |    1     |  2  |  3  |  4  |
+|       4       |  5  |  6  |  D  |   ->  |    Q     |  W  |  E  |  R  |
+|       7       |  8  |  9  |  E  |   ->  |    A     |  S  |  D  |  F  |
+|       A       |  0  |  B  |  F  |   ->  |    Z     |  X  |  C  |  V  |
 
 Press `Esc` to quit.
 
